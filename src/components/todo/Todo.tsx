@@ -17,22 +17,30 @@ const TodoList = () => {
   const todos = useAppSelector((state) => state.todo.todoList);
   return (
     <ul className="tasks-list">
-      {todos?.map((todo: { id: string; content: string; isDone: boolean }) => (
-        <TodoItem key={todo} />
-      ))}
+      {todos?.map(
+        (
+          todo: { id: string; content: string; isDone: boolean },
+          key: number
+        ) => (
+          <TodoItem
+            key={key}
+            id={todo.id}
+            isDone={todo.isDone}
+            content={todo.content}
+          />
+        )
+      )}
     </ul>
   );
 };
 
-const TodoItem = (key: {
-  isDone: any; id: string; content: string 
-}) => {
+const TodoItem = (todo: { isDone: boolean; id: string; content: string }) => {
   const dispatch = useAppDispatch();
   const [Done, setDone] = useState(false);
   const removeTask = () => {
     dispatch(
       deleteTask({
-        id: key.id,
+        id: todo.id,
       })
     );
   };
@@ -40,16 +48,16 @@ const TodoItem = (key: {
     setDone(true);
     dispatch(
       setIsDoneTask({
-        id: key.id,
+        id: todo.id,
       })
     );
   };
   return (
     <Row justify="space-between" style={{ marginTop: 12 }}>
-      {!key.isDone ? (
-        <Tag color="red">{key.content}</Tag>
+      {!todo.isDone ? (
+        <Tag color="red">{todo.content}</Tag>
       ) : (
-        <Tag color="green">{key.content}</Tag>
+        <Tag color="green">{todo.content}</Tag>
       )}
       <Space>
         <Switch onChange={checkDone} />
